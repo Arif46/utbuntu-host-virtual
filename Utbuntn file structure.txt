@@ -1,0 +1,63 @@
+How to create Virtual Hosts (For example our project directory is- /home/aryan/www/)
+-------------------------------------------------------------------------------------------------------------------------------
+
+Step-1: Run the below cmd for read and write hosts and apache2 configuration
+cmd: sudo nautilus
+
+Step-2: After running the cmd "sudo nautilus" then go to "Computer" directory 
+and search `hosts` and open the hosts file in editor mode.
+and add your hosts config name and port. 
+For example:
+127.1.2.1	moc-auth-service.local	
+127.1.2.2	moc-common-service.local
+
+
+Step-3: Then search apache2 and inside the apache2 folder, open apache2.conf file in editor.
+then modify the project directory path (i.e. /home/aryan/www/) into Directory tag.
+example- 
+<Directory /home/aryan/www/>
+	Options Indexes FollowSymLinks
+	AllowOverride None
+	Require all granted
+</Directory>
+
+
+Step-4: Inside the apache2 folder. Now open 000-default.conf file inside from 'site-available' folder. And changes the Document Root directory path as according to your project directory path. (i.e. /home/aryan/www/)
+
+Step-5: Now enable 'mods-availbe' folder by run this cmd- sudo a2enmod rewrite
+
+Step-6: Now, Open the terminal inside the apache2 folder and copy your config file from 'site-available' folder to 'site-enabled' folder by runing this cmd-
+sudo a2ensite 000-default.conf
+
+Step-7: Suppose we are confiuring 'moc-auth-service'. Now, copy the 000-default.conf file rename as moc-auth-service.local.conf (service_name.conf) inside the 'site-available' folder. 
+Again, run the cmd- sudo a2ensite <targeted filename i.e. moc-auth-service>
+and add the below code according to your host name and project directory.
+example-
+
+<VirtualHost *:80>
+DocumentRoot /home/aryan/www/moc/moc-auth-service/public
+ServerName moc-auth-service.local
+
+<Directory /home/aryan/www/moc/moc-auth-service/public>
+    AllowOverride All
+    Order deny,allow
+    Allow from all
+    </Directory>
+</VirtualHost>
+
+
+Step-8: Now, restart the apache server. cmd- sudo service apache2 restart
+
+Step-9: If your virtual url not working then give the project direcotry permission by using the below cmd:
+sudo chmod -R 755 ./
+sudo chmod -R 777 ./
+
+Step-10: If your project directory does not have permisions then give the permission from folder properties. 
+i.e. properties->permissions-> changes 'access only' to 'create and delete files'. 
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------
+
